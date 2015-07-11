@@ -1,6 +1,7 @@
 package com.huntersharpe.BountyHunter;
 
 import com.google.inject.Inject;
+import com.huntersharpe.BountyHunter.EconAPI.EconAPI;
 import com.huntersharpe.BountyHunter.EconAPI.command.Balance;
 import com.huntersharpe.BountyHunter.EconAPI.command.Econ;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -9,6 +10,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartingEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.Texts;
@@ -168,6 +170,11 @@ public class BountyHunter {
         game.getCommandDispatcher().register(plugin, ecoCommandSpec, "eco", "economy");
         game.getCommandDispatcher().register(plugin, balCommandSpec, "bal", "balance");
         game.getCommandDispatcher().register(plugin, bountyCommandSpec, "bounty");
+    }
+
+    @Subscribe
+    public void onServerStopping(ServerStoppingEvent e){
+        EconAPI.saveBalances();
     }
 
 }

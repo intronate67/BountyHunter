@@ -23,11 +23,10 @@ public class EconAPI {
             plugin.getLogger().log(Level.SEVERE, "Could not save configuration file!");
         }
     }
-
+    //TODO: Fix balance loading.
     public static void loadBalances(){
         if(!plugin.getConfigNode().getNode("balance").getValue("intronate67").equals(1)) return;
-        //TODO: Add foreach statement to load balances.
-        //Edit
+
     }
 
 }
