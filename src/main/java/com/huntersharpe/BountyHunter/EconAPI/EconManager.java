@@ -40,6 +40,7 @@ public class EconManager {
     public static BountyHunter getPlugin(){
         return plugin;
     }
+
     public static void getTopBal(Player p){
         Map.Entry<String, Double> maxEntry = null;
         for(Map.Entry<String, Double> entry : bal.entrySet()){

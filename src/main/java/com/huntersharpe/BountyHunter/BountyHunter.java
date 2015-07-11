@@ -1,6 +1,8 @@
 package com.huntersharpe.BountyHunter;
 
 import com.google.inject.Inject;
+import com.huntersharpe.BountyHunter.EconAPI.command.Balance;
+import com.huntersharpe.BountyHunter.EconAPI.command.Econ;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -9,6 +11,10 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.args.GenericArguments;
+import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +28,10 @@ import java.util.logging.Logger;
 public class BountyHunter {
 
     @Inject
-    Game game;
+    public Game game;
 
     @Inject
-    Logger logger;
+    public Logger logger;
 
     @Inject
     @DefaultConfig(sharedRoot = true)
@@ -69,6 +75,85 @@ public class BountyHunter {
 
     }
 
+    //Bounty Command
+
+    CommandSpec helpSpec = CommandSpec.builder()
+            .permission("bountyhunter.use")
+            .description(Texts.of("View command help."))
+            .build();
+    CommandSpec viewSpec = CommandSpec.builder()
+            .permission("bountyhunter.use")
+            .description(Texts.of("View all current bounties."))
+            .build();
+    CommandSpec acceptSpec = CommandSpec.builder()
+            .permission("bountyhunter.use.accept")
+            .description(Texts.of("Accept someones bounty."))
+            .build();
+    CommandSpec abandonSpec = CommandSpec.builder()
+            .permission("bountyhunter.use.abandon")
+            .description(Texts.of("Abandon your current accepted bounty."))
+            .build();
+    CommandSpec placeSpec = CommandSpec.builder()
+            .permission("bountyhunter.use.place")
+            .description(Texts.of("Place a bounty on someones head."))
+            .build();
+    CommandSpec removeSpec = CommandSpec.builder()
+            .permission("bountyhunter.use.remove")
+            .description(Texts.of("Remove a bounty you had set on someone."))
+            .build();
+
+    CommandSpec bountyCommandSpec = CommandSpec.builder()
+            .permission("bountyhunter.use")
+            .description(Texts.of("Basic Bounty Hunter command"))
+            .executor(new BountyCommand())
+            .child(helpSpec, "help")
+            .child(viewSpec, "view")
+            .child(acceptSpec, "accept")
+            .child(abandonSpec, "abandon")
+            .child(placeSpec, "place", "add")
+            .child(removeSpec, "remove", "cancel")
+            .build();
+
+    //Economy Command
+    CommandSpec setBalCmd = CommandSpec.builder()
+            .permission("bountyhunter.eco.admin")
+            .description(Texts.of("Set a players balance"))
+            .build();
+    CommandSpec addBalCmd = CommandSpec.builder()
+            .permission("bountyhunter.eco.admin")
+            .description(Texts.of("Add a certain amount of cash to a players balance."))
+            .build();
+    CommandSpec removeBalCmd = CommandSpec.builder()
+            .permission("bountyhunter.eco.admin")
+            .description(Texts.of("Remove a certain amount of cash from a players balance."))
+            .build();
+    CommandSpec getBalCmd = CommandSpec.builder()
+            .permission("bountyhunter.eco.admin")
+            .description(Texts.of("Get a players balance."))
+            .build();
+    CommandSpec topBalCmd = CommandSpec.builder()
+            .permission("bountyhunter.eco")
+            .description(Texts.of("Get the balance of the richest person."))
+            .build();
+    CommandSpec ecoCommandSpec = CommandSpec.builder()
+            .description(Texts.of("BountyHunter Economy BountyCommand"))
+            .permission("bountyhunter.eco")
+            .executor(new Econ())
+            .child(setBalCmd, "set")
+            .child(addBalCmd, "add")
+            .child(removeBalCmd, "remove")
+            .child(getBalCmd, "balance")
+            .child(topBalCmd, "top")
+            .build();
+
+    //Balance command
+
+    CommandSpec balCommandSpec = CommandSpec.builder()
+            .permission("bountyhunter.eco")
+            .description(Texts.of("Get your balance"))
+            .executor(new Balance())
+            .build();
+
     public ConfigurationNode getConfigNode(){
         return config;
     }
@@ -79,7 +164,10 @@ public class BountyHunter {
 
     @Subscribe
     public void onServerStart(ServerStartingEvent e){
-
+        loadConfig();
+        game.getCommandDispatcher().register(plugin, ecoCommandSpec, "eco", "economy");
+        game.getCommandDispatcher().register(plugin, balCommandSpec, "bal", "balance");
+        game.getCommandDispatcher().register(plugin, bountyCommandSpec, "bounty");
     }
 
 }
