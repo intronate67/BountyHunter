@@ -40,4 +40,4 @@ Permissions
   * bountyhunter.use.remove - Gives user permission to remove their bounty.
 - Staff
   * bountyhunter.exempt - Allows them to be exempt from having bounties placed on them.
-  * bountyhunter.override - Allows them to override placed bounties and remove them.
+  * bountyhunter.override - Allows them to override placed bounties and remove them.* Planned
