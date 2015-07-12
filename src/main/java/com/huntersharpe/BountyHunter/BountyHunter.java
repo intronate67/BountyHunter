@@ -178,9 +178,9 @@ public class BountyHunter {
     @Subscribe
     public void onServerStart(ServerStartingEvent e){
         loadConfig();
-        game.getCommandDispatcher().register(plugin, ecoCommandSpec, "eco", "economy");
-        game.getCommandDispatcher().register(plugin, balCommandSpec, "bal", "balance");
-        game.getCommandDispatcher().register(plugin, bountyCommandSpec, "bounty");
+        game.getCommandDispatcher().register(this, ecoCommandSpec, "eco", "economy");
+        game.getCommandDispatcher().register(this, balCommandSpec, "bal", "balance");
+        game.getCommandDispatcher().register(this, bountyCommandSpec, "bounty");
     }
 
     @Subscribe
