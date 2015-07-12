@@ -13,7 +13,9 @@ Features
 * Economy
 * Rewards for completing bounties
 * Each Bounty costs money
+* Admin bounty exclusion.
 
 **Planned**
 * Configurable decuctions for placing a bounty
 * Dropping player heads
+* Leaderboards
