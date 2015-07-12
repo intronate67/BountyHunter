@@ -28,3 +28,16 @@ Installation
 * Extract the BountyHunter-SNAPCHAT-X.X.Jar to your SpongeVanilla or Sponge server's mods/ folder
 * Configure your permissions and configuration file to your liking
 * Start up your server
+
+Permissions
+------------
+- Standard Users
+  * bountyhunter.use.* - Gives user permission to use all basic commands.
+  * bountyhunter.use.accept - Gives user permission to accept a bounty.
+  * bountyhunter.use.abandon - Gives user permission to abandon their current accepted bounty.
+- Trusted Users
+  * bountyhunter.use.place - Gives user permission to place a bounty.
+  * bountyhunter.use.remove - Gives user permission to remove their bounty.
+- Staff
+  * bountyhunter.exempt - Allows them to be exempt from having bounties placed on them.
+  * bountyhunter.override - Allows them to override placed bounties and remove them.
