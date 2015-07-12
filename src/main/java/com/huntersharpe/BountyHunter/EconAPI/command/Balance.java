@@ -18,10 +18,12 @@ public class Balance implements CommandExecutor{
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
         if(!(src instanceof Player)){
             src.sendMessage(Texts.of("Only players can use bounty hunter commands."));
+            CommandResult.success();
         }
         Player p = (Player) src;
         if(!p.hasPermission("bountyhunter.eco.bal")){
             p.sendMessage(Texts.of(TextColors.RED + "You do not have permission!"));
+            CommandResult.success();
         }
         String[] args = arguments.toString().split(" ");
         if(args.length != 0 ){
@@ -32,6 +34,7 @@ public class Balance implements CommandExecutor{
                     TextColors.DARK_GRAY,
                     TextColors.DARK_GRAY
             )));
+            CommandResult.success();
         }
         p.sendMessage(Texts.of(String.format(
                 "%s[%sEconomy%s] %sYour balance is: "

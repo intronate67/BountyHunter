@@ -18,24 +18,30 @@ public class Econ implements CommandExecutor{
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException{
         if(!(src instanceof Player)){
             src.sendMessage(Texts.of("Only players can run Bounty Hunter commands!"));
+            CommandResult.success();
         }
         Player p = (Player) src;
         if(!p.hasPermission("bountyhunter.eco")){
             p.sendMessage(Texts.of(TextColors.RED + "You do not have permission!"));
+            CommandResult.success();
         }
         String[] args = arguments.toString().split(" ");
         if(args.length >= 4 || args.length == 0){
             p.sendMessage(Texts.of(TextColors.GREEN+"Usage: /eco <add/remove/set/balance> [player] [amount]"));
+            CommandResult.success();
         }
         if(args[0].equalsIgnoreCase("add")){
             if(!(p.hasPermission("bountyhunter.eco.admin"))){
                 p.sendMessage(Texts.of(TextColors.RED + "You do not have permission!"));
+                CommandResult.success();
             }
             if(args.length != 3){
                 p.sendMessage(Texts.of(TextColors.RED + "BountyCommand Usage: /eco add <player> <amount>"));
+                CommandResult.success();
             }
             if(!EconManager.hasAccount(args[1])){
                 p.sendMessage(Texts.of(TextColors.RED + "Error: Player does not have an account!"));
+                CommandResult.success();
             }
             double amount = 0;
             try{
@@ -45,16 +51,20 @@ public class Econ implements CommandExecutor{
             }
             EconManager.setBalance(args[1], EconManager.getBalance(args[1]) + amount);
             p.sendMessage(Texts.of(TextColors.GREEN + "Added $" + amount + " to player: " + args[1] + "'s balance."));
+            CommandResult.success();
         }else if (args[0].equalsIgnoreCase("remove")){
             if(!p.hasPermission("bountyhunter.eco.admin")){
                 p.sendMessage(Texts.of(TextColors.RED + "You cannot do this!"));
+                CommandResult.success();
             }
             if(args.length != 3){
                 p.sendMessage(Texts.of(TextColors.RED + "BountyCommand Usage: /eco remove <player> <amount>"));
+                CommandResult.success();
             }
             if(!EconManager.hasAccount(args[1]))
             {
                 p.sendMessage(Texts.of(TextColors.RED + "Error: Player does not have an account"));
+                CommandResult.success();
             }
             double amount = 0;
             try
@@ -66,16 +76,20 @@ public class Econ implements CommandExecutor{
             }
             p.sendMessage(Texts.of(TextColors.RED + "Deducted " + amount + " from player: " + args[1] + "'s balance."));
             EconManager.setBalance(args[1], EconManager.getBalance(args[1]) - amount);
+            CommandResult.success();
         }else if(args[0].equalsIgnoreCase("set")){
             if(!p.hasPermission("bountyhunter.eco.admin")){
                 p.sendMessage(Texts.of(TextColors.RED + "You cannot do this!"));
+                CommandResult.success();
             }
             if(args.length != 3){
                 p.sendMessage(Texts.of(TextColors.RED + "BountyCommand Usage: /eco set <player> <amount>"));
+                CommandResult.success();
             }
             if(!EconManager.hasAccount(args[1]))
             {
                 p.sendMessage(Texts.of(TextColors.RED + "Error: Player does not have an account"));
+                CommandResult.success();
             }
             double amount = 0;
             try
@@ -87,26 +101,34 @@ public class Econ implements CommandExecutor{
             }
             p.sendMessage(Texts.of(TextColors.GREEN + "Set player: " + args[1] + "'s balance to " + amount));
             EconManager.setBalance(args[1], amount);
+            CommandResult.success();
         }else if(args[0].equalsIgnoreCase("balance")){
             if(!(p.hasPermission("bountyhunter.eco.admin"))){
-
+                p.sendMessage(Texts.of(TextColors.RED + "You do not have permission!"));
+                CommandResult.success();
             }
             if(args.length >= 3){
                 p.sendMessage(Texts.of("BountyCommand Usage: /eco balance <player>"));
+                CommandResult.success();
             }
             if(args.length == 2){
                 double balance = EconManager.getBalance(args[1]);
                 p.sendMessage(Texts.of(TextColors.BLUE + args[1] + "'s" + TextColors.DARK_GRAY +"balance is: " + TextColors.GREEN + balance));
+                CommandResult.success();
             }
             double balance = EconManager.getBalance(p.getName());
             p.sendMessage(Texts.of(TextColors.DARK_GRAY + "[" + TextColors.BLUE + "Balance" + TextColors.DARK_GRAY + "] " + TextColors.DARK_GRAY + "Their current balance is: " + TextColors.GREEN + balance));
+            CommandResult.success();
         }else if(args[0].equalsIgnoreCase("top")){
             if(!(p.hasPermission("bountyhunter.eco"))){
                 p.sendMessage(Texts.of(TextColors.RED + "You cannot do this!"));
+                CommandResult.success();
             }
             EconManager.getTopBal(p);
+            CommandResult.success();
         }else {
             p.sendMessage(Texts.of(TextColors.RED + "Incorrect argument"));
+            CommandResult.success();
         }
         return CommandResult.success();
     }
