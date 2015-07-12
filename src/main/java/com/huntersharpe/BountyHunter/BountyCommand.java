@@ -40,13 +40,13 @@ public class BountyCommand implements CommandExecutor{
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException{
         if(!(src instanceof Player)){
             src.sendMessage(Texts.of("Only players can use Bounty Hunter commands."));
-            CommandResult.success();
+            return CommandResult.success();
         }
         Player p = (Player) src;
         String[] args = arguments.toString().split(" ");
         if(p.hasPermission("bountyhunter.use")){
             p.sendMessage(Texts.of(TextColors.RED + "You do not have permission!"));
-            CommandResult.success();
+            return CommandResult.success();
         }
         if(!args[0].equalsIgnoreCase("help")
                 || args[0].equalsIgnoreCase("view")
@@ -57,7 +57,7 @@ public class BountyCommand implements CommandExecutor{
                 || args.length > 3
                 || args.length == 0){
             sendHelp(p);
-            CommandResult.success();
+            return CommandResult.success();
         } else {
             if(args[0].equalsIgnoreCase("help")){
                 p.sendMessage(Texts.of(TextColors.GRAY
@@ -73,12 +73,12 @@ public class BountyCommand implements CommandExecutor{
                 p.sendMessage(Texts.of(TextColors.BLUE + "/bounty abandon <player> " + TextColors.GRAY + "- Abandoned your current accepted bounty."));
                 p.sendMessage(Texts.of(TextColors.BLUE + "/bounty <place|add> <player> <value> " + TextColors.GRAY + "- Place a bounty on a player."));
                 p.sendMessage(Texts.of(TextColors.BLUE + "/bounty <remove|cancel> <player> " + TextColors.GRAY + "- Cancel a bounty you have placed."));
-                CommandResult.success();
+                return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("view")){
                 if(args.length != 1){
                     sendHelp(p);
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 p.sendMessage(Texts.of(prefix + TextColors.AQUA + "Available Bounties:"));
                 Iterator iterator = BountyUtil.getUtil().availBounty.entrySet().iterator();
@@ -87,83 +87,82 @@ public class BountyCommand implements CommandExecutor{
                     p.sendMessage(Texts.of(prefix + TextColors.AQUA + pair.getKey() + " for $" + pair.getValue()));
                     iterator.remove(); // avoids a ConcurrentModificationException
                 }
-                CommandResult.success();
+                return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("accept")){
                 if(args.length != 2){
                     sendHelp(p);
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 Player target = (Player) game.getServer().getPlayer(args[1]);
                 BountyHandler.getPlugin().acceptBounty(target, p.getName());
                 EconManager.setBalance(p.getName(), EconManager.getBalance(p.getName()) - 25D);
                 p.sendMessage(Texts.of(prefix + "You have accepted the bounty on player: " + target.getName()));
-                CommandResult.success();
+                return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("abandon")){
                 if(acceptedBounties.containsValue(p.getName())){
                     p.sendMessage(Texts.of(TextColors.RED + "You already have a current bounty!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 Player target = (Player) game.getServer().getPlayer(args[1]);
                 BountyHandler.getPlugin().abadonBounty(target, p.getName());
                 //TODO: Enable configurable deductions.
                 EconManager.setBalance(p.getName(), EconManager.getBalance(p.getName()) - 25D);
                 p.sendMessage(Texts.of(prefix + "You have abandoned the bounty on player: " + target.getName() + ". $25 has been removed from your account."));
-                CommandResult.success();
+                return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("place") || args[0].equalsIgnoreCase("add")){
                 if(args.length != 3){
                     sendHelp(p);
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(!game.getServer().getPlayer(args[1]).isPresent()){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "Player is not online!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 Player target = (Player) game.getServer().getPlayer(args[1]);
                 if(BountyUtil.getUtil().hasBounty(args[1])){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "Player already has a bounty!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(target.hasPermission("bountyhunter.exempt")){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "You cannot set a bounty on that player!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(BountyHandler.getPlugin().placedBounties.get(p.getName()).equals(1)){
                     p.sendMessage(Texts.of(prefix + "You have a current bounty set you cannot set more then one."));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 BountyUtil.getUtil().setBounty(args[1], Double.parseDouble(args[2]), p.getName());
                 p.sendMessage(Texts.of(prefix + TextColors.GREEN + "You have successfully placed a bounty on player: " + args[1] + " for " + args[2]));
                 MessageSink broadcastMessage = MessageSinks.toAll();
                 broadcastMessage.sendMessage(Texts.of(prefix + TextColors.GREEN + p.getName() + " has placed a bounty on player:" + args[1] + " for: $" + args[2] + ". Type /bounty accept <player> to accept."));
-                CommandResult.success();
+                return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("cancel")){
                 if(args.length != 3){
                     sendHelp(p);
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(!game.getServer().getPlayer(args[1]).isPresent()){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "Player is no longer online!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(BountyUtil.getUtil().hasBounty(args[1])){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "Player does not have an existing bounty!"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 if(BountyUtil.getUtil().bounty.containsKey(p.getName()) && BountyUtil.getUtil().bounties.get(args[1]).equals(p.getName())){
                     p.sendMessage(Texts.of(prefix + TextColors.RED + "You did not set this bounty"));
-                    CommandResult.success();
+                    return CommandResult.success();
                 }
                 BountyUtil.getUtil().removeBounty(args[1], p.getName(), Double.parseDouble(args[2]));
                 p.sendMessage(Texts.of(prefix + TextColors.GREEN + "You have successfully removed their bounty."));
-                CommandResult.success();
+                return CommandResult.success();
             }
-            CommandResult.success();
+            return CommandResult.success();
         }
-        return CommandResult.success();
     }
 
 }
