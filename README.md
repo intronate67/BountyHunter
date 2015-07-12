@@ -19,3 +19,12 @@ Features
 * Configurable decuctions for placing a bounty
 * Dropping player heads
 * Leaderboards
+
+Installation
+------------
+> **Note**: Check Travis-CI build to see if build is passing or failing 
+
+* Download the Zip file from [Here](http://huntersharpe.net/no-sidebar.html)
+* Extract the BountyHunter-SNAPCHAT-X.X.Jar to your SpongeVanilla or Sponge server's mods/ folder
+* Configure your permissions and configuration file to your liking
+* Start up your server
