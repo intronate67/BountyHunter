@@ -82,26 +82,32 @@ public class BountyHunter {
     CommandSpec helpSpec = CommandSpec.builder()
             .permission("bountyhunter.use")
             .description(Texts.of("View command help."))
+            .executor(new BountyCommand())
             .build();
     CommandSpec viewSpec = CommandSpec.builder()
             .permission("bountyhunter.use")
             .description(Texts.of("View all current bounties."))
+            .executor(new BountyCommand())
             .build();
     CommandSpec acceptSpec = CommandSpec.builder()
             .permission("bountyhunter.use.accept")
             .description(Texts.of("Accept someones bounty."))
+            .executor(new BountyCommand())
             .build();
     CommandSpec abandonSpec = CommandSpec.builder()
             .permission("bountyhunter.use.abandon")
             .description(Texts.of("Abandon your current accepted bounty."))
+            .executor(new BountyCommand())
             .build();
     CommandSpec placeSpec = CommandSpec.builder()
             .permission("bountyhunter.use.place")
             .description(Texts.of("Place a bounty on someones head."))
+            .executor(new BountyCommand())
             .build();
     CommandSpec removeSpec = CommandSpec.builder()
             .permission("bountyhunter.use.remove")
             .description(Texts.of("Remove a bounty you had set on someone."))
+            .executor(new BountyCommand())
             .build();
 
     CommandSpec bountyCommandSpec = CommandSpec.builder()
@@ -120,22 +126,27 @@ public class BountyHunter {
     CommandSpec setBalCmd = CommandSpec.builder()
             .permission("bountyhunter.eco.admin")
             .description(Texts.of("Set a players balance"))
+            .executor(new Econ())
             .build();
     CommandSpec addBalCmd = CommandSpec.builder()
             .permission("bountyhunter.eco.admin")
             .description(Texts.of("Add a certain amount of cash to a players balance."))
+            .executor(new Econ())
             .build();
     CommandSpec removeBalCmd = CommandSpec.builder()
             .permission("bountyhunter.eco.admin")
             .description(Texts.of("Remove a certain amount of cash from a players balance."))
+            .executor(new Econ())
             .build();
     CommandSpec getBalCmd = CommandSpec.builder()
             .permission("bountyhunter.eco.admin")
             .description(Texts.of("Get a players balance."))
+            .executor(new Econ())
             .build();
     CommandSpec topBalCmd = CommandSpec.builder()
             .permission("bountyhunter.eco")
             .description(Texts.of("Get the balance of the richest person."))
+            .executor(new Econ())
             .build();
     CommandSpec ecoCommandSpec = CommandSpec.builder()
             .description(Texts.of("BountyHunter Economy BountyCommand"))
