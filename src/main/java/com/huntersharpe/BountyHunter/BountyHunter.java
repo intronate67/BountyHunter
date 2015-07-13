@@ -14,8 +14,6 @@ import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.args.GenericArguments;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import java.io.File;
@@ -61,7 +59,6 @@ public class BountyHunter {
     public ConfigurationNode config = null;
 
     public void loadConfig() {
-
         try{
             if(!defaultConfig.exists()){
                 defaultConfig.createNewFile();
@@ -74,11 +71,9 @@ public class BountyHunter {
         } catch (IOException exception){
             logger.log(Level.SEVERE, "The default configuration could not be loaded or created!");
         }
-
     }
 
     //Bounty Command
-
     CommandSpec helpSpec = CommandSpec.builder()
             .permission("bountyhunter.use")
             .description(Texts.of("View command help."))
@@ -160,7 +155,6 @@ public class BountyHunter {
             .build();
 
     //Balance command
-
     CommandSpec balCommandSpec = CommandSpec.builder()
             .permission("bountyhunter.eco")
             .description(Texts.of("Get your balance"))
@@ -176,7 +170,7 @@ public class BountyHunter {
     }
 
     @Subscribe
-    public void onServerStart(ServerStartingEvent e){
+    public void onServerStart(ServerStartingEvent e) {
         loadConfig();
         game.getCommandDispatcher().register(this, ecoCommandSpec, "eco", "economy");
         game.getCommandDispatcher().register(this, balCommandSpec, "bal", "balance");
@@ -184,8 +178,6 @@ public class BountyHunter {
     }
 
     @Subscribe
-    public void onServerStopping(ServerStoppingEvent e){
-        EconAPI.saveBalances();
-    }
+    public void onServerStopping(ServerStoppingEvent e){ EconAPI.saveBalances(); }
 
 }
