@@ -2,16 +2,20 @@ package com.huntersharpe.BountyHunter;
 
 import com.google.inject.Inject;
 import com.huntersharpe.BountyHunter.EconAPI.EconAPI;
+import com.huntersharpe.BountyHunter.EconAPI.EconManager;
 import com.huntersharpe.BountyHunter.EconAPI.command.Balance;
 import com.huntersharpe.BountyHunter.EconAPI.command.Econ;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartingEvent;
+import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
+import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.config.ConfigDir;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.spec.CommandSpec;
@@ -27,20 +31,18 @@ import java.util.logging.Logger;
 @Plugin(id = "bountyhunter", name = "BountyHunter", version = "1.0")
 public class BountyHunter {
 
-    @Inject
-    public Game game;
+    @Inject public Game game;
+
+    @Inject public Logger logger;
 
     @Inject
-    public Logger logger;
-
-    @Inject
-    @DefaultConfig(sharedRoot = true)
-    public File defaultConfig;
+    @ConfigDir(sharedRoot = true)
+    public File defaultConfig = null;
 
     //On first run with return to file that doesn't exist.
     @Inject
     @DefaultConfig(sharedRoot = true)
-    public ConfigurationLoader<CommentedConfigurationNode> configManager;
+    public ConfigurationLoader<CommentedConfigurationNode> configurationLoader = null;
 
     public static BountyHunter plugin;
 
@@ -48,16 +50,18 @@ public class BountyHunter {
         return plugin;
     }
 
-    public File getConfig(){
-        return defaultConfig;
-    }
-
     public ConfigurationLoader getConfigLoader(){
-        return configManager;
+        return configurationLoader;
     }
 
-    public ConfigurationNode config = null;
+    private CommentedConfigurationNode rootNode = null;
 
+    private ConfigurationNode balanceNode = rootNode.getNode((Object[]) "root.economy.join-balance".split("\\."));
+
+    private ConfigurationNode exemptionNode = rootNode.getNode((Object[]) "root.admin-exemption.enable".split("\\."));
+
+    private ConfigurationNode deductionNode = rootNode.getNode((Object[]) "root.economy.deduction-value".split("\\."));
+    /*
     public void loadConfig() {
         try{
             if(!defaultConfig.exists()){
@@ -71,7 +75,7 @@ public class BountyHunter {
         } catch (IOException exception){
             logger.log(Level.SEVERE, "The default configuration could not be loaded or created!");
         }
-    }
+    }*/
 
     //Bounty Command
     CommandSpec helpSpec = CommandSpec.builder()
@@ -162,7 +166,7 @@ public class BountyHunter {
             .build();
 
     public ConfigurationNode getConfigNode(){
-        return config;
+        return rootNode;
     }
 
     public Logger getLogger(){
@@ -170,8 +174,22 @@ public class BountyHunter {
     }
 
     @Subscribe
-    public void onServerStart(ServerStartingEvent e) {
-        loadConfig();
+    public void onPreInit(PreInitializationEvent e){
+
+        try{
+            if(!defaultConfig.exists()) {
+                defaultConfig.mkdirs();
+                defaultConfig.createNewFile();
+                rootNode = configurationLoader.load();
+                balanceNode.setValue(100);
+                exemptionNode.setValue(true);
+                deductionNode.setValue(25);
+            }
+        }catch (IOException exception){
+            logger.log(Level.SEVERE, "Could not load configuration file!");
+            rootNode = null;
+        }
+
         game.getCommandDispatcher().register(this, ecoCommandSpec, "eco", "economy");
         game.getCommandDispatcher().register(this, balCommandSpec, "bal", "balance");
         game.getCommandDispatcher().register(this, bountyCommandSpec, "bounty");
@@ -179,5 +197,11 @@ public class BountyHunter {
 
     @Subscribe
     public void onServerStopping(ServerStoppingEvent e){ EconAPI.saveBalances(); }
+
+    @Subscribe
+    public void onPlayerJoin(PlayerJoinEvent e){
+        Player p = e.getUser();
+        EconManager.setBalance(p.getName(), rootNode.getNode("join-balance").getDouble());
+    }
 
 }

@@ -107,9 +107,9 @@ public class BountyCommand implements CommandExecutor{
                 }
                 Player target = (Player) game.getServer().getPlayer(args[1]);
                 BountyHandler.getPlugin().abadonBounty(target, p.getName());
-                //TODO: Enable configurable deductions.
-                EconManager.setBalance(p.getName(), EconManager.getBalance(p.getName()) - 25D);
-                p.sendMessage(Texts.of(prefix + "You have abandoned the bounty on player: " + target.getName() + ". $25 has been removed from your account."));
+                double deduction = BountyHunter.getInstance().getConfigNode().getNode((Object[]) "root.economy.deduction-value".split("\\.")).getDouble();
+                EconManager.setBalance(p.getName(), EconManager.getBalance(p.getName()) - deduction);
+                p.sendMessage(Texts.of(prefix + "You have abandoned the bounty on player: " + target.getName() + ". $" + String.valueOf(deduction) + " has been removed from your account."));
                 return CommandResult.success();
             }
             if(args[0].equalsIgnoreCase("place") || args[0].equalsIgnoreCase("add")){
