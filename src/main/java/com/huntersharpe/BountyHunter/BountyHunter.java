@@ -56,11 +56,11 @@ public class BountyHunter {
 
     private CommentedConfigurationNode rootNode = null;
 
-    private ConfigurationNode balanceNode = rootNode.getNode((Object[]) "root.economy.join-balance".split("\\."));
+    private ConfigurationNode balanceNode = null;
 
-    private ConfigurationNode exemptionNode = rootNode.getNode((Object[]) "root.admin-exemption.enable".split("\\."));
+    private ConfigurationNode exemptionNode = null;
 
-    private ConfigurationNode deductionNode = rootNode.getNode((Object[]) "root.economy.deduction-value".split("\\."));
+    private ConfigurationNode deductionNode = null;
 
     private void createNodes(){
         rootNode.getNode((Object[]) "root.economy.join-balance".split("\\.")).setValue(100);
