@@ -61,6 +61,15 @@ public class BountyHunter {
     private ConfigurationNode exemptionNode = rootNode.getNode((Object[]) "root.admin-exemption.enable".split("\\."));
 
     private ConfigurationNode deductionNode = rootNode.getNode((Object[]) "root.economy.deduction-value".split("\\."));
+
+    private void createNodes(){
+        rootNode.getNode((Object[]) "root.economy.join-balance".split("\\.")).setValue(100);
+        rootNode.getNode((Object[]) "root.admin-exemption.enable".split("\\.")).setValue(true);
+        rootNode.getNode((Object[]) "root.economy.deduction-value".split("\\.")).setValue(25);
+        balanceNode = rootNode.getNode((Object[]) "root.economy.join-balance".split("\\."));
+        exemptionNode = rootNode.getNode((Object[]) "root.admin-exemption.enable".split("\\."));
+        deductionNode = rootNode.getNode((Object[]) "root.economy.deduction-value".split("\\."));
+    }
     /*
     public void loadConfig() {
         try{
@@ -181,6 +190,7 @@ public class BountyHunter {
                 defaultConfig.mkdirs();
                 defaultConfig.createNewFile();
                 rootNode = configurationLoader.load();
+                createNodes();
                 balanceNode.setValue(100);
                 exemptionNode.setValue(true);
                 deductionNode.setValue(25);
