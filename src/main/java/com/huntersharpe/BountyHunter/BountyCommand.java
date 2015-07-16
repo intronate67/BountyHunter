@@ -33,12 +33,7 @@ public class BountyCommand implements CommandExecutor{
 
     public Map<String, String> acceptedBounties = new HashMap<String, String>();
 
-    private TextBuilder builder = Texts.builder();
-
-    private final Text prefix = Texts.builder("[").color(TextColors.DARK_GRAY)
-            .append(Texts.builder("Bounty").color(TextColors.BLUE).build())
-            .append(Texts.builder("]").color(TextColors.DARK_GRAY).build())
-            .build();
+    private final Text prefix = Texts.of(TextColors.DARK_GRAY, "[", TextColors.BLUE, "Bounty", TextColors.DARK_GRAY, "] ");
 
     //private final String prefix = String.format("%s[%sBountyHunter%s] ", TextColors.DARK_GRAY, TextColors.BLUE, TextColors.DARK_GRAY);
 
