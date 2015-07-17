@@ -6,7 +6,9 @@ import com.huntersharpe.BountyHunter.EconAPI.EconManager;
 import com.huntersharpe.BountyHunter.EconAPI.command.Balance;
 import com.huntersharpe.BountyHunter.EconAPI.command.Econ;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.player.Player;
@@ -38,12 +40,12 @@ public class BountyHunter {
 
     @Inject
     @ConfigDir(sharedRoot = true)
-    public File defaultConfig = null;
+    public File defaultConfig = new File("bounty.conf");
 
     //On first run with return to file that doesn't exist.
     @Inject
     @DefaultConfig(sharedRoot = true)
-    public ConfigurationLoader<CommentedConfigurationNode> configurationLoader = null;
+    public ConfigurationLoader<CommentedConfigurationNode> configurationLoader = HoconConfigurationLoader.builder().setFile(defaultConfig).build();
 
     public static BountyHunter plugin;
 
@@ -55,7 +57,7 @@ public class BountyHunter {
         return configurationLoader;
     }
 
-    private CommentedConfigurationNode rootNode = null;
+    private CommentedConfigurationNode rootNode = configurationLoader.createEmptyNode(ConfigurationOptions.defaults());
 
     private ConfigurationNode balanceNode = null;
 
@@ -212,7 +214,11 @@ public class BountyHunter {
     @Subscribe
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getUser();
-        EconManager.setBalance(p.getName(), rootNode.getNode("join-balance").getDouble());
+        //TODO: Check if node is existent in the config.
+        if(!rootNode.getNode("join-balance").isVirtual()){
+            EconManager.setBalance(p.getName(), rootNode.getNode("join-balance").getDouble());
+        }else{
+            return;
+        }
     }
-
 }
