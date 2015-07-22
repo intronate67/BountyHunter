@@ -11,14 +11,16 @@ Features
 -----------
 **Implemented**
 * Economy
-* Rewards for completing bounties
-* Each Bounty costs money
+* Rewards for completing bounties.
+* Each Bounty costs money.
 * Admin bounty exclusion.
+* Configurable deductions for placing a bounty.
 
 **Planned**
-* Configurable decuctions for placing a bounty
 * Dropping player heads
 * Leaderboards
+* Bounty Expirations
+* Bounty Cooldowns
 
 Installation
 ------------
